@@ -1,0 +1,131 @@
+# District Misery Index - Professional Economic Research Platform
+# GitHub Pages Configuration for Econometric Analysis Dashboard
+
+title: "District Misery Index: Professional Econometric Analysis"
+description: "Comprehensive multidimensional poverty analysis across 640 Indian districts using Alkire-Foster methodology and Sen's Capability Approach"
+url: "https://kushal-satya.github.io"
+baseurl: "/india_districts"
+
+# Author and Institution Information
+author: 
+  name: "Professional Econometric Research Team"
+  email: "research@institution.edu"
+  institution: "Advanced Development Economics Unit"
+
+# Repository Information
+repository: "kushal-satya/india_districts"
+github_username: "kushal-satya"
+
+# Academic and Research Metadata
+keywords: 
+  - development economics
+  - multidimensional poverty
+  - econometric analysis
+  - spatial inequality
+  - India development
+  - district-level deprivation
+  - Alkire-Foster methodology
+  - Sen capability approach
+
+# Technical Configuration
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Professional Settings
+permalink: pretty
+timezone: Asia/Kolkata
+lang: en
+
+# Build Settings
+safe: true
+incremental: false
+profile: false
+
+# Exclusions for Clean Build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
+  - LICENSE
+  - .gitignore
+
+# Include important files
+include:
+  - _pages
+  - assets
+  - data
+  - results
+
+# Collections for Academic Organization
+collections:
+  methodology:
+    output: true
+    permalink: /:collection/:name/
+  research:
+    output: true
+    permalink: /:collection/:name/
+
+# Default settings for professional presentation
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Research Team"
+  - scope:
+      path: ""
+      type: "methodology"
+    values:
+      layout: "page"
+  - scope:
+      path: ""
+      type: "research"
+    values:
+      layout: "page"
+
+# Social and Academic Links
+social_links:
+  github: "kushal-satya"
+  linkedin: "institution-profile"
+  google_scholar: "scholar-profile"
+  orcid: "researcher-orcid"
+
+# Google Analytics (for research metrics)
+google_analytics: "G-XXXXXXXXXX"
+
+# Academic Citation Format
+citation:
+  type: "dataset"
+  title: "District Misery Index: Comprehensive Econometric Analysis"
+  year: 2024
+  format: "Professional Economic Research Platform"
+  license: "CC BY 4.0"
+
+# Research Data Configuration
+data_sources:
+  primary: "Census 2011 + NFHS-5"
+  methodology: "Alkire-Foster Multidimensional Poverty Index"
+  coverage: "640 Districts (Census 2011 boundaries)"
+  quality_threshold: "70% data completeness"
+
+# Professional Branding
+logo: "/assets/images/dmi-logo.png"
+favicon: "/assets/images/favicon.ico"
+
+# SEO and Academic Indexing
+seo:
+  type: "ResearchProject"
+  name: "District Misery Index Analysis"
+  headline: "Professional Econometric Analysis of Multidimensional Deprivation in India"
+  image: "/assets/images/dmi-social-card.png" 

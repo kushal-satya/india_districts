@@ -1,0 +1,52 @@
+{
+  "framework": "Alkire-Foster Multidimensional Poverty Index",
+  "normalization": "Robust scaling (median and MAD-based)",
+  "indicators_used": [
+    "literacy_rate",
+    "female_literacy_rate",
+    "electricity_access",
+    "sanitation_access",
+    "safe_water_access",
+    "work_participation_rate",
+    "urban_percentage",
+    "lpg_penetration",
+    "internet_penetration"
+  ],
+  "districts_analyzed": 640,
+  "data_completeness_threshold": 0.7,
+  "weighting_schemes": {
+    "equal": [
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.1111111111111111
+    ],
+    "expert": [
+      0.02,
+      0.02,
+      0.16,
+      0.16,
+      0.16,
+      0.12,
+      0.12,
+      0.12,
+      0.12
+    ],
+    "category": [
+      0.016666666666666666,
+      0.016666666666666666,
+      0.06666666666666667,
+      0.06666666666666667,
+      0.06666666666666667,
+      0.016666666666666666,
+      0.016666666666666666,
+      0.016666666666666666,
+      0.016666666666666666
+    ]
+  }
+}
