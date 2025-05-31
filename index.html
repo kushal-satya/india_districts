@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District Misery Index (DMI): Professional Econometric Analysis of Multidimensional Deprivation</title>
+    <meta name="description" content="Comprehensive econometric dashboard analyzing multidimensional poverty across 640 Indian districts using Alkire-Foster methodology and Sen's Capability Approach.">
+    <meta name="keywords" content="development economics, multidimensional poverty, econometric analysis, spatial inequality, India development, district-level deprivation">
+    <meta name="author" content="Professional Econometric Research Team">
+    
+    <!-- External Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Custom Professional Styling -->
+    <style>
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            height: 400px; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 16px 0;
+        }
+        .data-table-container {
+            max-height: 600px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .professional-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .professional-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -6px rgba(0, 0, 0, 0.15);
+        }
+        .tab-button { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .tab-button.active { 
+            border-color: #1e40af; 
+            color: #1e40af; 
+            background-color: #eff6ff; 
+            font-weight: 600;
+        }
+        .content-section { 
+            display: none; 
+            animation: fadeIn 0.5s ease-in-out; 
+        }
+        .content-section.active { 
+            display: block; 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .loader { 
+            border: 4px solid #f3f4f6; 
+            border-radius: 50%; 
+            border-top: 4px solid #3b82f6; 
+            width: 50px; 
+            height: 50px; 
+            animation: spin 1s linear infinite; 
+            margin: 20px auto; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        .metric-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px -3px rgba(102, 126, 234, 0.3);
+        }
+        .deprivation-high { background-color: #fef2f2; border-left: 4px solid #ef4444; }
+        .deprivation-moderate { background-color: #fffbeb; border-left: 4px solid #f59e0b; }
+        .deprivation-low { background-color: #f0fdf4; border-left: 4px solid #22c55e; }
+        .professional-table th {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+        }
+        .professional-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .professional-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Professional Header -->
+    <header class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl">
+        <div class="container mx-auto max-w-7xl px-4 py-12">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold mb-4 tracking-tight">District Misery Index (DMI)</h1>
+                <p class="text-slate-300 text-xl mb-3">Professional Econometric Analysis of Multidimensional Deprivation in India</p>
+                <div class="flex flex-wrap justify-center gap-4 text-sm">
+                    <span class="bg-slate-700 px-3 py-1 rounded-full">Alkire-Foster Methodology</span>
+                    <span class="bg-slate-700 px-3 py-1 rounded-full">Sen's Capability Approach</span>
+                    <span class="bg-slate-700 px-3 py-1 rounded-full">640 Districts Analyzed</span>
+                    <span class="bg-slate-700 px-3 py-1 rounded-full">9 Development Indicators</span>
+                </div>
+                <p class="text-slate-400 text-sm mt-4">
+                    Research Framework: Multidimensional Poverty Measurement | Data Source: Census 2011 + NFHS-5 | 
+                    Quality Threshold: 70% Completeness | Weighting: Expert-Informed Analysis
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Loading Status -->
+    <div id="loading-status" class="container mx-auto max-w-7xl px-4 py-8">
+        <div class="professional-card p-8 text-center">
+            <div class="loader mx-auto mb-4"></div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Loading Professional Econometric Analysis</h3>
+            <p class="text-gray-600">Initializing comprehensive DMI dataset for 640 districts...</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard-main" class="container mx-auto max-w-7xl px-4 py-8" style="display: none;">
+        
+        <!-- Executive Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-highlight">
+                <h3 class="text-lg font-bold mb-2">Districts Analyzed</h3>
+                <p class="text-4xl font-bold" id="total-districts">640</p>
+                <p class="text-sm opacity-90">Census 2011 Boundaries</p>
+            </div>
+            <div class="metric-highlight">
+                <h3 class="text-lg font-bold mb-2">Theoretical Framework</h3>
+                <p class="text-xl font-bold">Alkire-Foster</p>
+                <p class="text-sm opacity-90">Multidimensional Methodology</p>
+            </div>
+            <div class="metric-highlight">
+                <h3 class="text-lg font-bold mb-2">Development Indicators</h3>
+                <p class="text-4xl font-bold">9</p>
+                <p class="text-sm opacity-90">Professional Quality Standards</p>
+            </div>
+            <div class="metric-highlight">
+                <h3 class="text-lg font-bold mb-2">Data Completeness</h3>
+                <p class="text-4xl font-bold">70%</p>
+                <p class="text-sm opacity-90">Minimum Threshold</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="bg-white shadow-lg rounded-xl mb-8 overflow-hidden">
+            <div class="flex flex-wrap">
+                <button class="tab-button active flex-1 py-4 px-6 text-center font-medium transition-all" data-tab="executive-summary">
+                    📊 Executive Summary
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all" data-tab="spatial-analysis">
+                    🗺️ Spatial Analysis
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all" data-tab="methodology">
+                    🔬 Methodology
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all" data-tab="priority-districts">
+                    🎯 Priority Districts
+                </button>
+                <button class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all" data-tab="data-explorer">
+                    📋 Data Explorer
+                </button>
+            </div>
+        </nav>
+
+        <!-- Content Sections -->
+        <main>
+            
+            <!-- Executive Summary Section -->
+            <section id="executive-summary" class="content-section active">
+                <div class="professional-card p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Executive Summary: Spatial Distribution of Multidimensional Deprivation</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Key Research Findings</h3>
+                            <div class="space-y-4 text-gray-700">
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-3 text-lg">•</span>
+                                    <p><strong>Geographic Coverage:</strong> Comprehensive analysis of 640 districts using Census 2011 administrative boundaries</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-3 text-lg">•</span>
+                                    <p><strong>Methodological Rigor:</strong> Implementation of Alkire-Foster framework with expert-weighted indicators</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-3 text-lg">•</span>
+                                    <p><strong>Quality Standards:</strong> 70% data completeness threshold ensuring robust econometric analysis</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-3 text-lg">•</span>
+                                    <p><strong>Policy Relevance:</strong> Identification of priority intervention districts for development planning</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Top 5 Most Deprived Districts</h3>
+                            <div id="top-districts-summary" class="space-y-3">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Distribution Chart -->
+                    <div class="chart-container">
+                        <canvas id="dmi-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Spatial Analysis Section -->
+            <section id="spatial-analysis" class="content-section">
+                <div class="professional-card p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Spatial Analysis: Geographic Distribution Patterns</h2>
+                    
+                    <!-- Methodology Selector -->
+                    <div class="mb-6 text-center">
+                        <h3 class="text-lg font-semibold mb-4">Select Weighting Methodology</h3>
+                        <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+                            <button id="btn-equal" class="methodology-btn px-4 py-2 rounded-md text-sm font-medium transition-all bg-blue-600 text-white" data-method="equal">
+                                Equal Weights
+                            </button>
+                            <button id="btn-expert" class="methodology-btn px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-700 hover:text-gray-900" data-method="expert">
+                                Expert Weights
+                            </button>
+                            <button id="btn-category" class="methodology-btn px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-700 hover:text-gray-900" data-method="category">
+                                Category Weights
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <canvas id="top-bottom-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="state-comparison-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Methodology Section -->
+            <section id="methodology" class="content-section">
+                <div class="professional-card p-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Research Methodology: Econometric Framework</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Theoretical Foundation</h3>
+                            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
+                                <p class="text-gray-700 mb-4">
+                                    <strong>Capability Approach (Sen, 1999):</strong> Poverty is fundamentally about the 
+                                    deprivation of basic capabilities rather than just low income.
+                                </p>
+                                <p class="text-gray-700">
+                                    <strong>Alkire-Foster Methodology (2011):</strong> Provides a robust framework for 
+                                    measuring multidimensional poverty that is decomposable and policy-relevant.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Mathematical Framework</h3>
+                            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                                <div class="font-mono text-sm bg-white p-4 rounded border">
+                                    DMI<sub>d</sub> = Σ<sub>i=1</sub><sup>k</sup> w<sub>i</sub> × I<sub>di</sub>
+                                    <br><br>
+                                    Where:<br>
+                                    • w<sub>i</sub> = weight for indicator i<br>
+                                    • I<sub>di</sub> = normalized deprivation score<br>
+                                    • k = total number of indicators
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Weighting Schemes -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4">Professional Weighting Methodologies</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
+                                <h4 class="font-bold text-blue-800 mb-3">Equal Weights</h4>
+                                <p class="text-blue-700 text-sm mb-3">Democratic approach ensuring balanced representation across all development dimensions.</p>
+                                <div class="text-xs text-blue-600">
+                                    <strong>Application:</strong> Baseline comparative analysis
+                                </div>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <h4 class="font-bold text-green-800 mb-3">Expert Weights</h4>
+                                <p class="text-green-700 text-sm mb-3">Literature-informed weights based on development economics research and policy priorities.</p>
+                                <div class="text-xs text-green-600">
+                                    <strong>Application:</strong> Policy-oriented analysis
+                                </div>
+                            </div>
+                            <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-600">
+                                <h4 class="font-bold text-purple-800 mb-3">Category Weights</h4>
+                                <p class="text-purple-700 text-sm mb-3">Domain-specific allocation ensuring proportional representation of major development categories.</p>
+                                <div class="text-xs text-purple-600">
+                                    <strong>Application:</strong> Sectoral analysis
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Indicator Framework -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Development Indicator Framework</h3>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="bg-white p-4 rounded border-l-4 border-red-500">
+                                    <h5 class="font-semibold text-red-800 mb-2">🏥 Health & Nutrition</h5>
+                                    <p class="text-xs text-gray-600">Child malnutrition, maternal health, anemia prevalence</p>
+                                </div>
+                                <div class="bg-white p-4 rounded border-l-4 border-blue-500">
+                                    <h5 class="font-semibold text-blue-800 mb-2">🎓 Education</h5>
+                                    <p class="text-xs text-gray-600">Literacy rates, school attendance, educational attainment</p>
+                                </div>
+                                <div class="bg-white p-4 rounded border-l-4 border-green-500">
+                                    <h5 class="font-semibold text-green-800 mb-2">🏠 Living Standards</h5>
+                                    <p class="text-xs text-gray-600">Housing, sanitation, electricity, water access</p>
+                                </div>
+                                <div class="bg-white p-4 rounded border-l-4 border-yellow-500">
+                                    <h5 class="font-semibold text-yellow-800 mb-2">💼 Economic Welfare</h5>
+                                    <p class="text-xs text-gray-600">Employment, income, financial inclusion</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Priority Districts Section -->
+            <section id="priority-districts" class="content-section">
+                <div class="professional-card p-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Priority Districts for Policy Intervention</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Most Deprived Districts -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4 text-red-700">🚨 Highest Priority (Most Deprived)</h3>
+                            <div id="most-deprived-list" class="space-y-3">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Best Performing Districts -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4 text-green-700">✅ Best Performing (Least Deprived)</h3>
+                            <div id="least-deprived-list" class="space-y-3">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Policy Recommendations -->
+                    <div class="mt-8 bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-3">Policy Recommendations</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
+                            <div>
+                                <strong>Immediate Interventions:</strong>
+                                <ul class="mt-2 space-y-1 list-disc list-inside">
+                                    <li>Multi-sectoral development programs</li>
+                                    <li>Enhanced healthcare infrastructure</li>
+                                    <li>Educational quality improvement</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Long-term Strategies:</strong>
+                                <ul class="mt-2 space-y-1 list-disc list-inside">
+                                    <li>Economic diversification initiatives</li>
+                                    <li>Infrastructure connectivity projects</li>
+                                    <li>Institutional capacity building</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Explorer Section -->
+            <section id="data-explorer" class="content-section">
+                <div class="professional-card p-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Comprehensive Data Explorer</h2>
+                    
+                    <!-- Search and Filter Controls -->
+                    <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="search-districts" placeholder="Search districts..." 
+                               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <select id="filter-state" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">All States</option>
+                        </select>
+                        <select id="filter-quintile" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">All Quintiles</option>
+                            <option value="Most Deprived">Most Deprived</option>
+                            <option value="High Deprivation">High Deprivation</option>
+                            <option value="Moderate Deprivation">Moderate Deprivation</option>
+                            <option value="Low Deprivation">Low Deprivation</option>
+                            <option value="Least Deprived">Least Deprived</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Data Table -->
+                    <div class="data-table-container">
+                        <table id="data-table" class="professional-table w-full">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>District</th>
+                                    <th>State</th>
+                                    <th>DMI Score</th>
+                                    <th>Quintile</th>
+                                    <th>Equal Weights</th>
+                                    <th>Expert Weights</th>
+                                    <th>Category Weights</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table-body">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Application -->
+    <script>
+        // Application State
+        let dmiData = [];
+        let currentMethod = 'equal';
+        let filteredData = [];
+        
+        // Chart instances
+        let distributionChart = null;
+        let topBottomChart = null;
+        let stateComparisonChart = null;
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing Professional DMI Dashboard...');
+            loadDMIData();
+            setupEventListeners();
+        });
+
+        // Load DMI Data
+        async function loadDMIData() {
+            try {
+                const response = await fetch('dashboard/data/district_misery_index_professional_analysis.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const csvText = await response.text();
+                dmiData = parseCSV(csvText);
+                
+                if (dmiData.length === 0) {
+                    throw new Error('No data found in CSV file');
+                }
+                
+                console.log(`Loaded ${dmiData.length} district records`);
+                
+                // Initialize dashboard
+                initializeDashboard();
+                
+                // Hide loading, show dashboard
+                document.getElementById('loading-status').style.display = 'none';
+                document.getElementById('dashboard-main').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading DMI data:', error);
+                showErrorMessage(`Failed to load data: ${error.message}`);
+            }
+        }
+
+        // CSV Parser
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            if (lines.length < 2) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                if (values.length === headers.length) {
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        let value = values[index];
+                        // Convert numeric values
+                        if (!isNaN(value) && value !== '') {
+                            value = parseFloat(value);
+                        }
+                        row[header] = value;
+                    });
+                    data.push(row);
+                }
+            }
+            
+            return data;
+        }
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            filteredData = [...dmiData];
+            
+            // Update summary statistics
+            updateSummaryCards();
+            
+            // Initialize visualizations
+            createDistributionChart();
+            createTopBottomChart();
+            createStateComparisonChart();
+            
+            // Populate data table
+            populateDataTable();
+            populateFilterOptions();
+            updateTopDistrictsSummary();
+            updatePriorityDistricts();
+            
+            console.log('Dashboard initialization completed');
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+            
+            // Methodology selection
+            document.querySelectorAll('.methodology-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    switchMethodology(this.dataset.method);
+                });
+            });
+            
+            // Data table filters
+            document.getElementById('search-districts').addEventListener('input', filterData);
+            document.getElementById('filter-state').addEventListener('change', filterData);
+            document.getElementById('filter-quintile').addEventListener('change', filterData);
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Methodology Switching
+        function switchMethodology(method) {
+            currentMethod = method;
+            
+            // Update button states
+            document.querySelectorAll('.methodology-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-700', 'hover:text-gray-900');
+            });
+            
+            event.target.classList.remove('text-gray-700', 'hover:text-gray-900');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            // Update charts
+            createTopBottomChart();
+            createStateComparisonChart();
+        }
+
+        // Update Summary Cards
+        function updateSummaryCards() {
+            document.getElementById('total-districts').textContent = dmiData.length.toLocaleString();
+        }
+
+        // Create Distribution Chart
+        function createDistributionChart() {
+            const ctx = document.getElementById('dmi-distribution-chart').getContext('2d');
+            
+            if (distributionChart) {
+                distributionChart.destroy();
+            }
+            
+            const dmiValues = dmiData.map(d => d.dmi_expert_weights);
+            const bins = createHistogramBins(dmiValues, 20);
+            
+            distributionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: bins.labels,
+                    datasets: [{
+                        label: 'Number of Districts',
+                        data: bins.counts,
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribution of District Misery Index Scores',
+                            font: { size: 16, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Districts'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'DMI Score Range'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create Top Bottom Chart
+        function createTopBottomChart() {
+            const ctx = document.getElementById('top-bottom-chart').getContext('2d');
+            
+            if (topBottomChart) {
+                topBottomChart.destroy();
+            }
+            
+            const methodColumn = `dmi_${currentMethod}_weights`;
+            const sortedData = [...dmiData].sort((a, b) => b[methodColumn] - a[methodColumn]);
+            
+            const top10 = sortedData.slice(0, 10);
+            const bottom10 = sortedData.slice(-10).reverse();
+            const combinedData = [...top10, ...bottom10];
+            
+            const labels = combinedData.map(d => `${d.District}, ${d.State}`);
+            const values = combinedData.map(d => d[methodColumn]);
+            const colors = [
+                ...Array(10).fill('rgba(239, 68, 68, 0.8)'),  // Red for worst
+                ...Array(10).fill('rgba(34, 197, 94, 0.8)')   // Green for best
+            ];
+            
+            topBottomChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'DMI Score',
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c.replace('0.8', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Top 10 Most & Least Deprived Districts (${currentMethod.replace('_', ' ').toUpperCase()})`,
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'DMI Score'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create State Comparison Chart
+        function createStateComparisonChart() {
+            const ctx = document.getElementById('state-comparison-chart').getContext('2d');
+            
+            if (stateComparisonChart) {
+                stateComparisonChart.destroy();
+            }
+            
+            const methodColumn = `dmi_${currentMethod}_weights`;
+            
+            // Group by state and calculate averages
+            const stateGroups = {};
+            dmiData.forEach(d => {
+                if (!stateGroups[d.State]) {
+                    stateGroups[d.State] = [];
+                }
+                stateGroups[d.State].push(d[methodColumn]);
+            });
+            
+            const stateAverages = Object.entries(stateGroups)
+                .map(([state, values]) => ({
+                    state: state,
+                    average: values.reduce((a, b) => a + b, 0) / values.length,
+                    count: values.length
+                }))
+                .sort((a, b) => b.average - a.average)
+                .slice(0, 15); // Top 15 states
+            
+            stateComparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: stateAverages.map(s => s.state),
+                    datasets: [{
+                        label: 'Average DMI Score',
+                        data: stateAverages.map(s => s.average),
+                        backgroundColor: 'rgba(147, 51, 234, 0.6)',
+                        borderColor: 'rgba(147, 51, 234, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `State-wise Average DMI Scores (${currentMethod.replace('_', ' ').toUpperCase()})`,
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Average DMI Score'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helper Functions
+        function createHistogramBins(data, numBins) {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const binWidth = (max - min) / numBins;
+            
+            const bins = Array(numBins).fill(0);
+            const labels = [];
+            
+            for (let i = 0; i < numBins; i++) {
+                const binStart = min + i * binWidth;
+                const binEnd = min + (i + 1) * binWidth;
+                labels.push(`${binStart.toFixed(1)} - ${binEnd.toFixed(1)}`);
+            }
+            
+            data.forEach(value => {
+                const binIndex = Math.min(Math.floor((value - min) / binWidth), numBins - 1);
+                bins[binIndex]++;
+            });
+            
+            return { labels, counts: bins };
+        }
+
+        function updateTopDistrictsSummary() {
+            const container = document.getElementById('top-districts-summary');
+            const sortedData = [...dmiData].sort((a, b) => b.dmi_expert_weights - a.dmi_expert_weights);
+            
+            container.innerHTML = sortedData.slice(0, 5).map((district, index) => `
+                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                    <div>
+                        <span class="font-semibold text-red-800">${index + 1}. ${district.District}</span>
+                        <p class="text-sm text-red-600">${district.State}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-red-700">${district.dmi_expert_weights.toFixed(3)}</span>
+                        <p class="text-xs text-red-500">DMI Score</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updatePriorityDistricts() {
+            const sortedData = [...dmiData].sort((a, b) => b.dmi_expert_weights - a.dmi_expert_weights);
+            
+            // Most deprived
+            const mostDeprived = document.getElementById('most-deprived-list');
+            mostDeprived.innerHTML = sortedData.slice(0, 10).map((d, i) => `
+                <div class="deprivation-high p-4 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-semibold">${i + 1}. ${d.District}, ${d.State}</span>
+                            <p class="text-sm text-gray-600">Rank: ${d.rank_expert} | DMI: ${d.dmi_expert_weights.toFixed(3)}</p>
+                        </div>
+                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">${d.quintile_expert}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Least deprived
+            const leastDeprived = document.getElementById('least-deprived-list');
+            leastDeprived.innerHTML = sortedData.slice(-10).reverse().map((d, i) => `
+                <div class="deprivation-low p-4 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-semibold">${i + 1}. ${d.District}, ${d.State}</span>
+                            <p class="text-sm text-gray-600">Rank: ${d.rank_expert} | DMI: ${d.dmi_expert_weights.toFixed(3)}</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">${d.quintile_expert}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateDataTable() {
+            const tbody = document.getElementById('data-table-body');
+            
+            function renderTable(data) {
+                tbody.innerHTML = data.map(d => `
+                    <tr>
+                        <td>${d.rank_expert}</td>
+                        <td class="font-medium">${d.District}</td>
+                        <td>${d.State}</td>
+                        <td class="font-mono">${d.dmi_expert_weights.toFixed(3)}</td>
+                        <td><span class="px-2 py-1 text-xs rounded-full ${getQuintileClass(d.quintile_expert)}">${d.quintile_expert}</span></td>
+                        <td class="font-mono">${d.dmi_equal_weights.toFixed(3)}</td>
+                        <td class="font-mono">${d.dmi_expert_weights.toFixed(3)}</td>
+                        <td class="font-mono">${d.dmi_category_weights.toFixed(3)}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            renderTable(filteredData);
+        }
+
+        function populateFilterOptions() {
+            const stateSelect = document.getElementById('filter-state');
+            const uniqueStates = [...new Set(dmiData.map(d => d.State))].sort();
+            
+            stateSelect.innerHTML = '<option value="">All States</option>' + 
+                uniqueStates.map(state => `<option value="${state}">${state}</option>`).join('');
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-districts').value.toLowerCase();
+            const selectedState = document.getElementById('filter-state').value;
+            const selectedQuintile = document.getElementById('filter-quintile').value;
+            
+            filteredData = dmiData.filter(d => {
+                const matchesSearch = d.District.toLowerCase().includes(searchTerm) || 
+                                    d.State.toLowerCase().includes(searchTerm);
+                const matchesState = !selectedState || d.State === selectedState;
+                const matchesQuintile = !selectedQuintile || d.quintile_expert === selectedQuintile;
+                
+                return matchesSearch && matchesState && matchesQuintile;
+            });
+            
+            populateDataTable();
+        }
+
+        function getQuintileClass(quintile) {
+            const classes = {
+                'Most Deprived': 'bg-red-100 text-red-800',
+                'High Deprivation': 'bg-orange-100 text-orange-800',
+                'Moderate Deprivation': 'bg-yellow-100 text-yellow-800',
+                'Low Deprivation': 'bg-blue-100 text-blue-800',
+                'Least Deprived': 'bg-green-100 text-green-800'
+            };
+            return classes[quintile] || 'bg-gray-100 text-gray-800';
+        }
+
+        function showErrorMessage(message) {
+            const container = document.getElementById('loading-status');
+            container.innerHTML = `
+                <div class="professional-card p-8 text-center">
+                    <div class="text-red-600 text-6xl mb-4">⚠️</div>
+                    <h3 class="text-xl font-semibold text-red-800 mb-2">Data Loading Error</h3>
+                    <p class="text-red-600 mb-4">${message}</p>
+                    <button onclick="location.reload()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg">
+                        Retry Loading
+                    </button>
+                </div>
+            `;
+        }
+
+    </script>
+</body>
+</html> 
