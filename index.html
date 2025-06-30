@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Seed Variety Dashboard</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
+                    <p class="text-gray-600 mt-1">Stress Tolerance Identification Dashboard</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-primary-green text-white px-4 py-2 rounded-lg">
+                        <span class="font-semibold" id="totalSeeds">Loading...</span>
+                        <span class="text-sm ml-1">varieties</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Left Column: Filters and Map -->
+            <div class="space-y-6">
+                
+                <!-- Filters Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
+                    <h2 class="text-xl font-semibold text-dark-green mb-4">Filters</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- State Filter -->
+                        <div>
+                            <label for="stateFilter" class="block text-sm font-medium text-gray-700 mb-2">State</label>
+                            <select id="stateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
+                                <option value="">All States</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Crop Type Filter -->
+                        <div>
+                            <label for="cropFilter" class="block text-sm font-medium text-gray-700 mb-2">Crop Type</label>
+                            <select id="cropFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
+                                <option value="">All Crops</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Year Filter -->
+                        <div>
+                            <label for="yearFilter" class="block text-sm font-medium text-gray-700 mb-2">Year of Release</label>
+                            <select id="yearFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
+                                <option value="">All Years</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Search Input -->
+                        <div>
+                            <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Search Seeds</label>
+                            <input type="text" id="searchInput" placeholder="Search by seed name or variety..." 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <!-- Clear Filters Button -->
+                    <div class="mt-4">
+                        <button id="clearFilters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors duration-200">
+                            Clear All Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Cultivation Map Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
+                    <h2 class="text-xl font-semibold text-dark-green mb-4">Cultivation Map</h2>
+                    <div id="map" class="w-full h-96 lg:h-[500px] rounded-lg border border-gray-200"></div>
+                    <p class="text-sm text-gray-600 mt-2">Click on states to filter results</p>
+                </div>
+                
+            </div>
+            
+            <!-- Right Column: Data Table -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-dark-green">Seed Data Details</h2>
+                    <div class="text-sm text-gray-600">
+                        Showing <span id="filteredCount">0</span> of <span id="totalCount">0</span> varieties
+                    </div>
+                </div>
+                
+                <!-- Table Container -->
+                <div class="table-container">
+                    <table class="min-w-full">
+                        <thead class="bg-dark-green text-white sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Seed Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Crop Type</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">State</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Year</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Stress Tolerance</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="seedTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loadingState" class="text-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green mx-auto"></div>
+                    <p class="text-gray-600 mt-4">Loading seed varieties...</p>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-8 hidden">
+                    <div class="text-4xl mb-4">🌱</div>
+                    <p class="text-lg font-medium text-gray-600">No seed varieties found</p>
+                    <p class="text-sm text-gray-500">Try adjusting your filters or search terms</p>
+                </div>
+                
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html> 
