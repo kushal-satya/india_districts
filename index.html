@@ -54,7 +54,8 @@
 
         /* Robust Table Styles */
         .table-container {
-            /* max-height is removed to allow flex-grow to work */
+            /* Set a fixed height for desktop and a different one for mobile */
+            height: 650px;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -79,6 +80,13 @@
             background: var(--cta-color-dark);
             transform: translateY(-1px);
         }
+
+        /* Responsive height for the table */
+        @media (max-width: 1024px) {
+            .table-container {
+                height: 50vh; /* A viewport height is better for mobile */
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -88,7 +96,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
                     <!-- PxD Logo -->
-                    <img src="PxD_logo.png" alt="PxD Logo" class="h-10">
+                    <img src="PxD_logo.png" alt="PxD Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/150x40/00594a/FFFFFF?text=PxD+Logo';">
                     <div>
                         <h1 class="text-2xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
                         <p class="text-gray-500 text-sm">Stress Tolerance Identification Dashboard</p>
@@ -106,7 +114,7 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-start">
             
             <!-- Left Column: Filters and Map -->
             <div class="space-y-6">
@@ -156,8 +164,7 @@
             </div>
             
             <!-- Right Column: Data Table -->
-            <!-- ADDED: flex, flex-col, and h-full to make this column stretch -->
-            <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all flex flex-col h-full">
+            <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-dark-green">Seed Data Details</h2>
                     <div class="text-sm text-gray-600">
@@ -166,8 +173,7 @@
                 </div>
                 
                 <!-- Table Container -->
-                <!-- ADDED: flex-grow to make the table container fill the available space -->
-                <div class="table-container flex-grow">
+                <div class="table-container">
                     <table class="min-w-full">
                         <thead class="bg-dark-green text-white sticky top-0 z-10">
                             <tr>
@@ -176,23 +182,21 @@
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">State</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Year</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Stress Tolerance</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Source Institute</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="seedTableBody" class="bg-white divide-y divide-gray-200">
-
+                            <!-- Rows will be populated by JavaScript. -->
                         </tbody>
                     </table>
                 </div>
                 
-                <!-- Loading State -->
-                <div id="loadingState" class="text-center py-12">
+                <!-- Loading State and Empty State will be shown/hidden by JS inside the table container -->
+                <div id="loadingState" class="text-center py-12 hidden">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green mx-auto"></div>
                     <p class="text-gray-600 mt-4">Loading seed varieties...</p>
                 </div>
                 
-                <!-- Empty State -->
                 <div id="emptyState" class="text-center py-12 hidden">
                     <div class="text-5xl mb-4">🌱</div>
                     <p class="text-lg font-medium text-gray-700">No seed varieties found</p>
@@ -203,7 +207,7 @@
             
         </div>
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>
-
