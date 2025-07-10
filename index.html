@@ -54,7 +54,7 @@
 
         /* Robust Table Styles */
         .table-container {
-            max-height: 75vh; /* Increased height */
+            /* max-height is removed to allow flex-grow to work */
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -156,7 +156,8 @@
             </div>
             
             <!-- Right Column: Data Table -->
-            <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
+            <!-- ADDED: flex, flex-col, and h-full to make this column stretch -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all flex flex-col h-full">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-dark-green">Seed Data Details</h2>
                     <div class="text-sm text-gray-600">
@@ -165,7 +166,8 @@
                 </div>
                 
                 <!-- Table Container -->
-                <div class="table-container">
+                <!-- ADDED: flex-grow to make the table container fill the available space -->
+                <div class="table-container flex-grow">
                     <table class="min-w-full">
                         <thead class="bg-dark-green text-white sticky top-0 z-10">
                             <tr>
@@ -174,23 +176,12 @@
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">State</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Year</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Stress Tolerance</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Source Institute</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="seedTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Rows will be populated by JavaScript. 
-                                 Example of a row structure:
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Example Seed</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Wheat</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Punjab</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">2021</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Drought</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <button class="btn-show-notes">Details</button>
-                                </td>
-                            </tr>
-                            -->
+
                         </tbody>
                     </table>
                 </div>
@@ -212,9 +203,7 @@
             
         </div>
     </main>
-
-    <!-- Your custom JavaScript file -->
-    <!-- Make sure the 'script.js' file exists and is correctly linked. -->
     <script src="script.js"></script>
 </body>
 </html>
+
