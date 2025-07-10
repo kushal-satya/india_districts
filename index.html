@@ -39,8 +39,6 @@
             --card-bg: #ffffff;
         }
 
-        /* Applying brand colors via Tailwind's theme extension is best, 
-           but for simplicity, we'll use CSS variables with utility classes. */
         .bg-primary-green { background-color: var(--primary-green); }
         .bg-dark-green { background-color: var(--dark-green); }
         .text-dark-green { color: var(--dark-green); }
@@ -84,7 +82,7 @@
         /* Responsive height for the table */
         @media (max-width: 1024px) {
             .table-container {
-                height: 50vh; /* A viewport height is better for mobile */
+                height: 50vh; 
             }
         }
     </style>
@@ -96,7 +94,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
                     <!-- PxD Logo -->
-                    <img src="PxD_logo.png" alt="PxD Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/150x40/00594a/FFFFFF?text=PxD+Logo';">
+                    <img src="PxD_logo.png" alt="PxD Logo" class="h-15" onerror="this.onerror=null;this.src='https://placehold.co/150x40/00594a/FFFFFF?text=PxD+Logo';">
                     <div>
                         <h1 class="text-2xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
                         <p class="text-gray-500 text-sm">Stress Tolerance Identification Dashboard</p>
