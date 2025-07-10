@@ -1,8 +1,23 @@
+/* PxD Brand Color Palette
+  - Primary: #00594a
+  - Secondary: #6abeb4
+  - CTA (Call to Action): #b0462e
+  - Yellow: #eaba4a
+*/
+
 /* Brand Color Variables */
 :root {
-    --primary-green: #008080;
-    --dark-green: #004d4d;
-    --light-accent: #b2d8d8;
+    /* Mapped PxD colors to the existing variable names for compatibility */
+    --primary-green: #6abeb4;      /* PxD Secondary */
+    --dark-green: #00594a;         /* PxD Primary */
+    --light-accent: #b5dfda;       /* A light tint of PxD Secondary */
+    
+    /* New variables for CTA and Yellow accents */
+    --cta-color: #b0462e;           /* PxD CTA */
+    --cta-color-dark: #8c3825;      /* Darker shade of CTA for hover states */
+    --accent-yellow-bg: #f9efd2;    /* A light tint of PxD Yellow for highlighting */
+
+    /* Neutral colors remain the same */
     --neutral-bg: #f8fafc;
     --card-bg: #ffffff;
 }
@@ -29,18 +44,18 @@
 .leaflet-popup-content h3 {
     margin: 0 0 4px 0;
     font-weight: 600;
-    color: var(--dark-green);
+    color: var(--dark-green); /* PxD Primary */
 }
 
 /* State highlighting for map interactions */
 .state-selected {
-    fill: var(--primary-green) !important;
-    stroke: var(--dark-green) !important;
+    fill: var(--primary-green) !important; /* PxD Secondary */
+    stroke: var(--dark-green) !important;  /* PxD Primary */
     stroke-width: 2px !important;
 }
 
 .state-hover {
-    fill: var(--light-accent) !important;
+    fill: var(--light-accent) !important; /* Tint of PxD Secondary */
 }
 
 /* Table Enhancements */
@@ -61,12 +76,12 @@
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: var(--primary-green);
+    background: var(--primary-green); /* PxD Secondary */
     border-radius: 4px;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-    background: var(--dark-green);
+    background: var(--dark-green); /* PxD Primary */
 }
 
 /* Expandable row styling */
@@ -77,15 +92,15 @@
 .notes-content {
     padding: 16px;
     background: linear-gradient(to right, #f8fafc, #ffffff);
-    border-left: 4px solid var(--primary-green);
+    border-left: 4px solid var(--primary-green); /* PxD Secondary */
     margin: 8px 0;
     border-radius: 4px;
     line-height: 1.6;
 }
 
-/* Button Styling */
+/* Button Styling - Updated with CTA color */
 .btn-show-notes {
-    background: var(--primary-green);
+    background: var(--cta-color); /* PxD CTA */
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -96,7 +111,7 @@
 }
 
 .btn-show-notes:hover {
-    background: var(--dark-green);
+    background: var(--cta-color-dark); /* Darker PxD CTA */
     transform: translateY(-1px);
 }
 
@@ -116,9 +131,10 @@
     transform: translateY(-1px);
 }
 
-/* Search Highlighting */
+/* Search Highlighting - Updated with PxD Yellow tint */
 .highlight {
-    background-color: #fef3c7;
+    background-color: var(--accent-yellow-bg); /* Tint of PxD Yellow */
+    color: #92400e; /* Using a dark orange for better contrast */
     font-weight: 600;
     border-radius: 2px;
     padding: 1px 2px;
@@ -342,12 +358,12 @@ a:focus {
     outline-offset: 2px;
 }
 
-/* High contrast mode support */
+/* High contrast mode support - Updated with new palette */
 @media (prefers-contrast: high) {
     :root {
-        --primary-green: #006666;
-        --dark-green: #003333;
-        --light-accent: #99cccc;
+        --primary-green: #5aa89e;
+        --dark-green: #004035;
+        --light-accent: #94d1ca;
     }
 }
 
@@ -361,4 +377,4 @@ a:focus {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-} 
+}
