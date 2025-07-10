@@ -18,22 +18,86 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
             crossorigin=""></script>
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Custom PxD Styles -->
+    <style>
+        /* PxD Brand Color Palette
+          - Primary: #00594a
+          - Secondary: #6abeb4
+          - CTA (Call to Action): #b0462e
+          - Yellow: #eaba4a
+        */
+
+        /* Brand Color Variables */
+        :root {
+            --primary-green: #6abeb4;      /* PxD Secondary */
+            --dark-green: #00594a;         /* PxD Primary */
+            --light-accent: #b5dfda;       /* A light tint of PxD Secondary */
+            --cta-color: #b0462e;           /* PxD CTA */
+            --cta-color-dark: #8c3825;      /* Darker shade of CTA for hover states */
+            --accent-yellow-bg: #f9efd2;    /* A light tint of PxD Yellow for highlighting */
+            --neutral-bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        /* Applying brand colors via Tailwind's theme extension is best, 
+           but for simplicity, we'll use CSS variables with utility classes. */
+        .bg-primary-green { background-color: var(--primary-green); }
+        .bg-dark-green { background-color: var(--dark-green); }
+        .text-dark-green { color: var(--dark-green); }
+        .ring-primary-green { ring-color: var(--primary-green); }
+        .border-primary-green { border-color: var(--primary-green); }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .transition-all { transition: all 0.3s ease-in-out; }
+
+        /* Robust Table Styles */
+        .table-container {
+            max-height: 75vh; /* Increased height */
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .table-container::-webkit-scrollbar { width: 8px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f5f9; }
+        .table-container::-webkit-scrollbar-thumb { background: var(--primary-green); border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: var(--dark-green); }
+
+        /* Custom button for table actions */
+        .btn-show-notes {
+            background: var(--cta-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        .btn-show-notes:hover {
+            background: var(--cta-color-dark);
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
-    <!-- Header -->
+    <!-- Header with PxD Logo -->
     <header class="bg-white shadow-md border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
-                    <p class="text-gray-600 mt-1">Stress Tolerance Identification Dashboard</p>
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <!-- PxD Logo -->
+                    <img src="PxD_logo.png" alt="PxD Logo" class="h-10">
+                    <div>
+                        <h1 class="text-2xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
+                        <p class="text-gray-500 text-sm">Stress Tolerance Identification Dashboard</p>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="bg-primary-green text-white px-4 py-2 rounded-lg">
-                        <span class="font-semibold" id="totalSeeds">Loading...</span>
-                        <span class="text-sm ml-1">varieties</span>
+                    <div class="bg-primary-green text-white px-4 py-2 rounded-lg text-center">
+                        <span class="font-semibold text-xl" id="totalSeeds">Loading...</span>
+                        <span class="text-xs block">varieties</span>
                     </div>
                 </div>
             </div>
@@ -50,32 +114,22 @@
                 <!-- Filters Card -->
                 <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
                     <h2 class="text-xl font-semibold text-dark-green mb-4">Filters</h2>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- State Filter -->
                         <div>
                             <label for="stateFilter" class="block text-sm font-medium text-gray-700 mb-2">State</label>
-                            <select id="stateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
-                                <option value="">All States</option>
-                            </select>
+                            <select id="stateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"></select>
                         </div>
-                        
                         <!-- Crop Type Filter -->
                         <div>
                             <label for="cropFilter" class="block text-sm font-medium text-gray-700 mb-2">Crop Type</label>
-                            <select id="cropFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
-                                <option value="">All Crops</option>
-                            </select>
+                            <select id="cropFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"></select>
                         </div>
-                        
                         <!-- Year Filter -->
                         <div>
                             <label for="yearFilter" class="block text-sm font-medium text-gray-700 mb-2">Year of Release</label>
-                            <select id="yearFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
-                                <option value="">All Years</option>
-                            </select>
+                            <select id="yearFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"></select>
                         </div>
-                        
                         <!-- Search Input -->
                         <div>
                             <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Search Seeds</label>
@@ -83,9 +137,8 @@
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent">
                         </div>
                     </div>
-                    
                     <!-- Clear Filters Button -->
-                    <div class="mt-4">
+                    <div class="mt-6">
                         <button id="clearFilters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors duration-200">
                             Clear All Filters
                         </button>
@@ -93,10 +146,11 @@
                 </div>
                 
                 <!-- Cultivation Map Card -->
-                <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
-                    <h2 class="text-xl font-semibold text-dark-green mb-4">Cultivation Map</h2>
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all flex flex-col items-center">
+                    <h2 class="text-xl font-semibold text-dark-green mb-4 w-full">Cultivation Map</h2>
+                    <!-- Map is centered within this container -->
                     <div id="map" class="w-full h-96 lg:h-[500px] rounded-lg border border-gray-200"></div>
-                    <p class="text-sm text-gray-600 mt-2">Click on states to filter results</p>
+                    <p class="text-sm text-gray-600 mt-2 w-full">Click on states to filter results</p>
                 </div>
                 
             </div>
@@ -106,39 +160,51 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-dark-green">Seed Data Details</h2>
                     <div class="text-sm text-gray-600">
-                        Showing <span id="filteredCount">0</span> of <span id="totalCount">0</span> varieties
+                        Showing <span id="filteredCount" class="font-bold">0</span> of <span id="totalCount" class="font-bold">0</span> varieties
                     </div>
                 </div>
                 
                 <!-- Table Container -->
                 <div class="table-container">
                     <table class="min-w-full">
-                        <thead class="bg-dark-green text-white sticky top-0">
+                        <thead class="bg-dark-green text-white sticky top-0 z-10">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Seed Name</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Crop Type</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">State</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Year</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Stress Tolerance</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Seed Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Crop</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">State</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Year</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Stress Tolerance</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="seedTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Table rows will be populated by JavaScript -->
+                            <!-- Rows will be populated by JavaScript. 
+                                 Example of a row structure:
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Example Seed</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Wheat</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Punjab</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">2021</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Drought</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <button class="btn-show-notes">Details</button>
+                                </td>
+                            </tr>
+                            -->
                         </tbody>
                     </table>
                 </div>
                 
                 <!-- Loading State -->
-                <div id="loadingState" class="text-center py-8">
+                <div id="loadingState" class="text-center py-12">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green mx-auto"></div>
                     <p class="text-gray-600 mt-4">Loading seed varieties...</p>
                 </div>
                 
                 <!-- Empty State -->
-                <div id="emptyState" class="text-center py-8 hidden">
-                    <div class="text-4xl mb-4">🌱</div>
-                    <p class="text-lg font-medium text-gray-600">No seed varieties found</p>
+                <div id="emptyState" class="text-center py-12 hidden">
+                    <div class="text-5xl mb-4">🌱</div>
+                    <p class="text-lg font-medium text-gray-700">No seed varieties found</p>
                     <p class="text-sm text-gray-500">Try adjusting your filters or search terms</p>
                 </div>
                 
@@ -147,7 +213,8 @@
         </div>
     </main>
 
-    <!-- Custom JavaScript -->
+    <!-- Your custom JavaScript file -->
+    <!-- Make sure the 'script.js' file exists and is correctly linked. -->
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
