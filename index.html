@@ -39,6 +39,8 @@
             --card-bg: #ffffff;
         }
 
+        /* Applying brand colors via Tailwind's theme extension is best, 
+           but for simplicity, we'll use CSS variables with utility classes. */
         .bg-primary-green { background-color: var(--primary-green); }
         .bg-dark-green { background-color: var(--dark-green); }
         .text-dark-green { color: var(--dark-green); }
@@ -52,8 +54,9 @@
 
         /* Robust Table Styles */
         .table-container {
-            /* Height is now controlled by flex-grow, not a fixed value */
-            overflow-y: auto; /* Scroll will appear if content exceeds container height */
+            /* A fixed height for desktop to align with the map card */
+            height: 780px; 
+            overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
         }
@@ -92,8 +95,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
-                    <!-- PxD Logo -->
-                    <img src="PxD_logo.png" alt="PxD Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/150x40/00594a/FFFFFF?text=PxD+Logo';">
+                    <!-- PxD Logo - Increased size -->
+                    <img src="PxD_logo.png" alt="PxD Logo" class="h-16" onerror="this.onerror=null;this.src='https://placehold.co/240x64/00594a/FFFFFF?text=PxD+Logo';">
                     <div>
                         <h1 class="text-xl md:text-2xl font-bold text-dark-green">India Seed Variety Dashboard</h1>
                         <p class="text-gray-500 text-sm">Stress Tolerance Identification Dashboard</p>
@@ -111,10 +114,11 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Reverted to Grid layout. `items-start` aligns columns to the top. -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             
             <!-- Left Column: Filters and Map -->
-            <div class="w-full lg:w-5/12 space-y-6">
+            <div class="w-full space-y-6">
                 
                 <!-- Filters Card -->
                 <div class="bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
@@ -160,7 +164,7 @@
             </div>
             
             <!-- Right Column: Data Table -->
-            <div class="w-full lg:w-7/12 bg-white rounded-lg shadow-md p-6 hover-lift transition-all flex flex-col">
+            <div class="w-full bg-white rounded-lg shadow-md p-6 hover-lift transition-all">
                 <div class="flex-shrink-0 flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-dark-green">Seed Data Details</h2>
                     <div class="text-sm text-gray-600">
@@ -168,8 +172,8 @@
                     </div>
                 </div>
                 
-                <!-- Table Container now grows to fill available space -->
-                <div class="table-container flex-grow">
+                <!-- Table Container has a fixed height now -->
+                <div class="table-container">
                     <table class="min-w-full">
                         <thead class="bg-dark-green text-white sticky top-0 z-10">
                             <tr>
@@ -182,9 +186,10 @@
                             </tr>
                         </thead>
                         <tbody id="seedTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Rows  populated by JavaScript. -->
+                            <!-- Rows will be populated by JavaScript. -->
                         </tbody>
                     </table>
+                     <!-- Loading and Empty states are inside the container to be part of the scroll -->
                     <div id="loadingState" class="text-center py-12 hidden">
                         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green mx-auto"></div>
                         <p class="text-gray-600 mt-4">Loading seed varieties...</p>
@@ -200,6 +205,7 @@
         </div>
     </main>
 
+    <!-- Your custom JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
